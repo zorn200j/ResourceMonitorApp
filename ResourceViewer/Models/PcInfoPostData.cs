@@ -10,6 +10,7 @@
 
         public ulong UpTime { get; set; }
 
+        public ulong Processes { get; set; }
         public ulong TotalMemory { get; set; }
 
         

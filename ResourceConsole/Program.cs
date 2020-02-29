@@ -15,7 +15,7 @@ namespace ResourceConsole
     class Program
     {
         static bool _running = true;
-        static PerformanceCounter _cpuCounter, _memUsageCounter, _upTimeCounter;
+        static PerformanceCounter _cpuCounter, _memUsageCounter, _upTimeCounter, _processCounter;
 
         static void Main(string[] args)
         {
@@ -34,8 +34,8 @@ namespace ResourceConsole
                 _memUsageCounter = new PerformanceCounter("Memory", "Available KBytes");
 
                 _upTimeCounter = new PerformanceCounter("System", "System Up Time");
-               
-                
+
+                _processCounter = new PerformanceCounter("System", "Processes");
 
 
                 pollingThread = new Thread(new ParameterizedThreadStart(RunPollingThread));
@@ -73,10 +73,10 @@ namespace ResourceConsole
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 1000)
                 {
                     double cpuTime;
-                    ulong memUsage, upTime, totalMemory;
+                    ulong memUsage, upTime, processes, totalMemory;
 
                     
-                    GetMetrics(out cpuTime, out memUsage, out upTime, out totalMemory);
+                    GetMetrics(out cpuTime, out memUsage, out upTime, out processes, out totalMemory);
 
                  
                     var postData = new
@@ -85,6 +85,7 @@ namespace ResourceConsole
                         Processor = cpuTime,
                         MemUsage = memUsage,
                         UpTime = upTime,
+                        Processes = processes,
                         TotalMemory = totalMemory
                      
                     };
@@ -108,11 +109,12 @@ namespace ResourceConsole
             }
         }
 
-        static void GetMetrics(out double processorTime, out ulong memUsage, out ulong upTime, out ulong totalMemory)
+        static void GetMetrics(out double processorTime, out ulong memUsage, out ulong upTime, out ulong processes, out ulong totalMemory)
         {
             processorTime = (double)_cpuCounter.NextValue();
             memUsage = (ulong)_memUsageCounter.NextValue();
             upTime = (ulong)_upTimeCounter.NextValue();
+            processes = (ulong)_processCounter.NextValue();
             totalMemory = 0;
             
 

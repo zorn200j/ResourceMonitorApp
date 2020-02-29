@@ -21,15 +21,16 @@
     var hub = $.connection.pcInfo;
 
     // Add a handler to receive updates from the server
-    hub.client.pcInfoMessage = function (machineName, cpu, memUsage, upTime, memTotal) {
+    hub.client.pcInfoMessage = function (machineName, cpu, memUsage, upTime, processes, memTotal) {
 
         var machine = {
             machineName: machineName,
             cpu: cpu.toFixed(0),
-            memUsage: (memUsage / 1024).toFixed(2),
-            memTotal: (memTotal / 1024).toFixed(2),
+            memUsage: (memUsage / 1024).toFixed(2) + "Mb",
+            memTotal: (memTotal / 1024).toFixed(2) + "Mb",
             memPercent: ((memUsage / memTotal) * 100).toFixed(1) + "%",
-            upTime: (upTime / 3600).toFixed(2) + "Hrs"
+            upTime: (upTime / 3600).toFixed(2) + "Hrs",
+            processes: processes
             
         };
 

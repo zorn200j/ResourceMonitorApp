@@ -17,12 +17,12 @@
 
 	<table border="0" class="table table-striped">
 		<tr>
-			<th>Machine</th>
+			<th>Device Name</th>
 			<th>CPU %</th>
-			<th>Memory Available (Mb)</th>
-			<th>Total Memory (Mb)</th>
-			<th>Mem Available %</th>
-			<th>Up Time</th>
+			<th>Memory Available</th>
+			<th>Total Memory</th>
+			<th>Memory Available %</th>
+
 		</tr>
 
 
@@ -34,10 +34,23 @@
 			<td data-bind="text: memUsage"></td>
 			<td data-bind="text: memTotal"></td>
 			<td data-bind="text: memPercent"></td>
-			<td data-bind="text: upTime"></td>
 
 		</tr>
 
+		<tr>
+			<th>Up Time</th>
+			<th>Processes</th>
+		
+		</tr>
+
+		<tr>
+			
+			<td data-bind="text: upTime"></td>
+			<td data-bind="text: processes"></td>
+			
+			
+
+		</tr>
 		<!-- /ko -->
 
 	</table>
