@@ -1,42 +1,45 @@
 ﻿$(function () {
 
-    // The view model that is bound to our view
+   
     var ViewModel = function () {
         var self = this;
 
-        // Whether we're connected or not
+        
         self.connected = ko.observable(false);
 
-        // Collection of machines that are connected
+        
         self.machines = ko.observableArray();
     };
 
-    // Instantiate the viewmodel..
+    
     var vm = new ViewModel();
 
-    // .. and bind it to the view
+    
     ko.applyBindings(vm, $("#computerInfo")[0]);
 
-    // Get a reference to our hub
+    
     var hub = $.connection.pcInfo;
 
-    // Add a handler to receive updates from the server
-    hub.client.pcInfoMessage = function (machineName, cpu, memUsage, upTime, processes, memTotal) {
+    
+    hub.client.pcInfoMessage = function (machineName, cpu, memUsage, upTime, processes, disk, interrupts, mutexes, memTotal) {
 
         var machine = {
             machineName: machineName,
             cpu: cpu.toFixed(0),
-            memUsage: (memUsage / 1024).toFixed(2) + "Mb",
-            memTotal: (memTotal / 1024).toFixed(2) + "Mb",
+            memUsage: (memUsage / 1024).toFixed(2) + " Mb",
+            memTotal: (memTotal / 1024).toFixed(2) + " Mb",
             memPercent: ((memUsage / memTotal) * 100).toFixed(1) + "%",
-            upTime: (upTime / 3600).toFixed(2) + "Hrs",
-            processes: processes
+            upTime: (upTime / 3600).toFixed(2) + " Hrs",
+            processes: processes,
+            disk: disk.toFixed(0) + " Bytes/sec",
+            interrupts: interrupts.toFixed(0),
+            mutexes: mutexes.toFixed(0)
             
         };
 
         var machineModel = ko.mapping.fromJS(machine);
 
-        // Check if we already have it:
+        
         var match = ko.utils.arrayFirst(vm.machines(), function (item) {
             return item.machineName() == machineName;
         });
@@ -49,7 +52,7 @@
         }
     };
 
-    // Start the connectio
+    
     $.connection.hub.start().done(function () {
         vm.connected(true);
     });

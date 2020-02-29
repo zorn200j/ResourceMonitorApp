@@ -3,12 +3,6 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style type="text/css">
-	.highCpu {
-		background: red;
-		color: white;
-	}
-</style>
 
 <div id="computerInfo">
 
@@ -40,6 +34,9 @@
 		<tr>
 			<th>Up Time</th>
 			<th>Processes</th>
+			<th>Disk Bytes/sec</th>
+			<th>Interrupts/sec</th>
+			<th>Mutexes</th>
 		
 		</tr>
 
@@ -47,6 +44,9 @@
 			
 			<td data-bind="text: upTime"></td>
 			<td data-bind="text: processes"></td>
+			<td data-bind="text: disk"></td>
+			<td data-bind="text: interrupts"></td>
+			<td data-bind="text: mutexes"></td>
 			
 			
 

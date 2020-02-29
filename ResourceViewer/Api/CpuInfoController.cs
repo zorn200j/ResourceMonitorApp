@@ -11,7 +11,7 @@ namespace ResourceViewer.Api
         public void Post(PcInfoPostData pcInfo)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<PcInfo>();
-            context.Clients.All.pcInfoMessage(pcInfo.MachineName, pcInfo.Processor, pcInfo.MemUsage, pcInfo.UpTime, pcInfo.Processes, pcInfo.TotalMemory);
+            context.Clients.All.pcInfoMessage(pcInfo.MachineName, pcInfo.Processor, pcInfo.MemUsage, pcInfo.UpTime, pcInfo.Processes, pcInfo.Disk, pcInfo.Interrupts, pcInfo.Mutexes, pcInfo.TotalMemory);
         }
     }
 }

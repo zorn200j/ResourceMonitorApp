@@ -15,7 +15,7 @@ namespace ResourceConsole
     class Program
     {
         static bool _running = true;
-        static PerformanceCounter _cpuCounter, _memUsageCounter, _upTimeCounter, _processCounter;
+        static PerformanceCounter _cpuCounter, _memUsageCounter, _upTimeCounter, _processCounter, _diskCounter, _interruptsCounter, _mutexCounter;
 
         static void Main(string[] args)
         {
@@ -37,6 +37,20 @@ namespace ResourceConsole
 
                 _processCounter = new PerformanceCounter("System", "Processes");
 
+                _diskCounter = new PerformanceCounter();
+                _diskCounter.CategoryName = "LogicalDisk";
+                _diskCounter.CounterName = "Disk Bytes/sec";
+                _diskCounter.InstanceName = "C:";
+
+                _interruptsCounter = new PerformanceCounter();
+                _interruptsCounter.CategoryName = "Processor";
+                _interruptsCounter.CounterName = "Interrupts/sec";
+                _interruptsCounter.InstanceName = "_Total";
+
+                _mutexCounter = new PerformanceCounter();
+                _mutexCounter.CategoryName = "Objects";
+                _mutexCounter.CounterName = "Mutexes";
+                
 
                 pollingThread = new Thread(new ParameterizedThreadStart(RunPollingThread));
                 pollingThread.Start();
@@ -73,10 +87,10 @@ namespace ResourceConsole
                 if ((DateTime.Now - lastPollTime).TotalMilliseconds >= 1000)
                 {
                     double cpuTime;
-                    ulong memUsage, upTime, processes, totalMemory;
+                    ulong memUsage, upTime, processes, disk, interrupts, mutexes, totalMemory;
 
                     
-                    GetMetrics(out cpuTime, out memUsage, out upTime, out processes, out totalMemory);
+                    GetMetrics(out cpuTime, out memUsage, out upTime, out processes, out disk, out interrupts, out mutexes, out totalMemory);
 
                  
                     var postData = new
@@ -86,6 +100,9 @@ namespace ResourceConsole
                         MemUsage = memUsage,
                         UpTime = upTime,
                         Processes = processes,
+                        Disk = disk,
+                        Interrupts = interrupts,
+                        Mutexes = mutexes,
                         TotalMemory = totalMemory
                      
                     };
@@ -109,12 +126,16 @@ namespace ResourceConsole
             }
         }
 
-        static void GetMetrics(out double processorTime, out ulong memUsage, out ulong upTime, out ulong processes, out ulong totalMemory)
+        static void GetMetrics(out double processorTime, out ulong memUsage, out ulong upTime, out ulong processes,
+            out ulong disk, out ulong interrupts, out ulong mutexes, out ulong totalMemory)
         {
             processorTime = (double)_cpuCounter.NextValue();
             memUsage = (ulong)_memUsageCounter.NextValue();
             upTime = (ulong)_upTimeCounter.NextValue();
             processes = (ulong)_processCounter.NextValue();
+            disk = (ulong)_diskCounter.NextValue();
+            interrupts = (ulong)_interruptsCounter.NextValue();
+            mutexes = (ulong)_mutexCounter.NextValue();
             totalMemory = 0;
             
 
